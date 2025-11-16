@@ -1,4 +1,4 @@
-module github.com/stolos-cloud/stolos-k8s-template/scaffolds/full-stack
+module github.com/stolos-cloud/test-template/scaffolds/full-stack
 
 go 1.25.0
 

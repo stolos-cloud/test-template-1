@@ -1,4 +1,4 @@
-module github.com/stolos-cloud/stolos-k8s-template/scaffolds/basic-container-deployment
+module github.com/stolos-cloud/test-template/scaffolds/basic-container-deployment
 
 go 1.25.0
 

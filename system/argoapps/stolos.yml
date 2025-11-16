@@ -13,7 +13,7 @@ spec:
       directory:
         include: 
           - "airway.yml"
-    - repoURL: 'https://github.com/stolos-cloud/stolos-k8s-template.git'
+    - repoURL: 'https://github.com/stolos-cloud/test-template.git'
       path: system
       targetRevision: HEAD
       directory:

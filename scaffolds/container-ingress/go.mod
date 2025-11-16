@@ -1,4 +1,4 @@
-module github.com/stolos-cloud/stolos-k8s-template/scaffolds/container-ingress
+module github.com/stolos-cloud/test-template/scaffolds/container-ingress
 
 go 1.25.0
 
