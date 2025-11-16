@@ -1,0 +1,9 @@
+apiVersion: templates.stolos.cloud/v1
+kind: ContainerDeployment
+metadata:
+  name: demo-container
+  namespace: default
+spec:
+  image: ghcr.io/example/app:latest
+  replicas: 2
+  port: 8080

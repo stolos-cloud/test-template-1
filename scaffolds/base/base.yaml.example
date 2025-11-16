@@ -1,0 +1,7 @@
+apiVersion: templates.stolos.cloud/v1
+kind: Base
+metadata:
+  name: demo-base
+  namespace: default
+spec:
+  SomeProperty: Hello World

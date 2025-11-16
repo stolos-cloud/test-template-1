@@ -1,0 +1,52 @@
+kind: Airway
+apiVersion: yoke.cd/v1alpha1
+metadata:
+  name: backends.stolos.cloud
+  annotations:
+    stolos.cloud/template-display-name: Backend API service
+spec:
+  wasmUrls:
+    flight: ghcr.io/stolos-cloud/stolos-k8s-template/templates/backend:321863dc8499a1ed28caf1a9f715e9e73d7ef292
+  fixDriftInterval: 5m0s
+  mode: subscription
+  template:
+    group: stolos.cloud
+    names:
+      plural: backends
+      singular: backend
+      kind: Backend
+    scope: Namespaced
+    versions:
+      - name: v1apha1
+        served: true
+        storage: true
+        schema:
+          openAPIV3Schema:
+            type: object
+            required:
+              - spec
+            properties:
+              spec:
+                type: object
+                required:
+                  - image
+                  - replicas
+                  - port
+                properties:
+                  image:
+                    type: string
+                  labels:
+                    type: object
+                    additionalProperties:
+                      type: string
+                  nodePort:
+                    type: integer
+                  port:
+                    type: integer
+                    default: 80
+                  replicas:
+                    type: integer
+                    default: 1
+  prune:
+    crds: true
+  timeout: 1m0s

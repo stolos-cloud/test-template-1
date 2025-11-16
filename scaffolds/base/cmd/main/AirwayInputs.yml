@@ -1,0 +1,8 @@
+apiVersion: stolos.cloud/v1alpha
+kind: AirwayInputs
+spec:
+  NamePlural:   "base"
+  NameSingular: "bases"
+  Kind:         "Base"
+  Version:      "v1alpha1"
+  DisplayName:  "Base Scaffold (Change me!)"

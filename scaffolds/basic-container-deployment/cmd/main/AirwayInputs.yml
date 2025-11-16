@@ -1,0 +1,9 @@
+apiVersion: stolos.cloud/v1alpha
+kind: AirwayInputs
+spec:
+  NamePlural:   "containerdeployments"
+  NameSingular: "containerdeployment"
+  Kind:         "ContainerDeployment"
+  Version:      "v1alpha1"
+  DisplayName:  "Basic Container Deployment"
+

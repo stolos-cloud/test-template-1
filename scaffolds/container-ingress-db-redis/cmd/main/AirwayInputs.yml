@@ -1,0 +1,8 @@
+apiVersion: stolos.cloud/v1alpha
+kind: AirwayInputs
+spec:
+  NamePlural:   "containeringressdbredis"
+  NameSingular: "containeringressdbredis"
+  Kind:         "ContainerIngressDBRedis"
+  Version:      "v1alpha1"
+  DisplayName:  "Container + Ingress + DB + Redis"

@@ -1,0 +1,39 @@
+apiVersion: templates.stolos.cloud/v1
+kind: FullStack
+metadata:
+  name: demo-store
+  namespace: default
+spec:
+  backend:
+    image: ghcr.io/example/api:latest
+    replicas: 2
+    containerPort: 8080
+    host: api.demo-store.example.com
+    path: /api
+    tlsSecretName: api-tls
+  database:
+    clusterName: demo-store-pg
+    databaseName: app
+    instances: 2
+    storageSize: 20Gi
+    postgresVersion: "16"
+  cache:
+    flavor: redis
+    port: 6379
+  frontend:
+    host: demo-store.example.com
+    path: /
+    tlsSecretName: frontend-tls
+    image: nginx:stable-alpine
+    replicas: 2
+    staticContent: |
+      <!doctype html>
+      <html>
+        <head>
+          <title>Demo Store</title>
+        </head>
+        <body>
+          <h1>Demo Store</h1>
+          <p>Backend API: https://api.demo-store.example.com/api</p>
+        </body>
+      </html>

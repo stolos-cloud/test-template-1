@@ -1,0 +1,36 @@
+name: Replace Template References
+
+on:
+  push:
+    branches: 
+      - main
+      - master
+
+jobs:
+  replace-template:
+    name: Replace Template References
+    if: github.repository != 'stolos-cloud/stolos-k8s-template'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set repository full name
+        run: echo "REPO_NAME=${GITHUB_REPOSITORY}" >> $GITHUB_ENV
+
+      - name: Replace template references
+        run: |
+          echo "Replacing all instances of 'stolos-cloud/stolos-k8s-template' with '$REPO_NAME'"
+          # Find all files and replace
+          find . -type f ! -path '*/.*' ! -name '.*' -print0 | xargs -0 sed -i "s|stolos-cloud/stolos-k8s-template|$REPO_NAME|g"
+
+      - name: Delete init workflow
+        run: rm .github/workflows/init-repo-template.yml
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Replace template references with current repo" || echo "No changes to commit"
+          git push

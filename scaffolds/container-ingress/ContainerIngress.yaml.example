@@ -1,0 +1,12 @@
+apiVersion: templates.stolos.cloud/v1
+kind: ContainerIngress
+metadata:
+  name: demo-api
+  namespace: default
+spec:
+  image: ghcr.io/example/api:latest
+  replicas: 2
+  containerPort: 8080
+  host: api.example.com
+  path: /
+  tlsSecretName: api-tls

@@ -1,0 +1,88 @@
+on:
+  push:
+    paths:
+      - 'templates/**'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Determine changed subfolders
+        id: changes
+        run: |
+          # Base folder to look into
+          BASE_DIR="templates"
+
+          # Get changed files between the base and head commits
+          # git fetch origin main --depth=2
+
+          # Detect changed files only inside the base folder
+          CHANGED_FOLDERS=$(git diff --name-only origin/main^1 HEAD -- "${BASE_DIR}/" | \
+            awk -F/ 'NF>1 {print $2}' | sort -u)
+
+          echo "Changed subfolders:"
+          echo "$CHANGED_FOLDERS"
+
+          # Export list for next steps
+          echo "changed=${CHANGED_FOLDERS}" >> "$GITHUB_OUTPUT"
+
+      - name: Run go run in changed subfolders
+        if: steps.changes.outputs.changed != ''
+        run: |
+          BASE_DIR="templates"
+
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
+          curl -L -o - 'https://github.com/yokecd/yoke/releases/download/latest/yoke_latest_linux_amd64.gz' | gunzip  > ./yoke
+          chmod +x ./yoke
+          
+          for folder in ${CHANGED}; do
+            # Build flight 
+            echo "Building flight in ${BASE_DIR}/${folder}..."
+            cd "${BASE_DIR}/${folder}"
+            go mod download
+            GOOS=wasip1 GOARCH=wasm go build -o flight.wasm ./cmd/main/
+            
+            # Push wasm to oci registry
+            MODULE=$(go list -m)
+            IMAGE=$(echo "$MODULE:$GITHUB_SHA" | sed -E 's|^[^/]+/(.*)|ghcr.io/\1|')
+
+            echo "Pushing ${IMAGE} to GHCR..."
+            ${GITHUB_WORKSPACE}/yoke stow flight.wasm "oci://${IMAGE}"
+
+            # Generate airway.yml
+            echo "Generating airway.yml for ${IMAGE}..."
+             go run -tags airway ./cmd/main/ -flight-url "oci://$IMAGE" | yq -P > airway.yml
+            git add airway.yml || true
+            cd -
+          done
+        env:
+          CHANGED: ${{ steps.changes.outputs.changed }}
+
+      - name: Commit and push if any files staged
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "stolos+github-actions[bot]@users.noreply.github.com"
+
+          # Check if index has staged files
+          if ! git diff --cached --quiet; then
+            echo "Staged changes found, committing..."
+            git commit -m "Auto-generated airways [ci]"
+            git push origin HEAD:${GITHUB_REF_NAME}
+          else
+            echo "No staged changes found, skipping commit."
+          fi

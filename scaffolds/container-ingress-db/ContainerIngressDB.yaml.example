@@ -1,0 +1,18 @@
+apiVersion: templates.stolos.cloud/v1
+kind: ContainerIngressDB
+metadata:
+  name: demo-api-db
+  namespace: default
+spec:
+  image: ghcr.io/example/api:latest
+  replicas: 2
+  containerPort: 8080
+  host: api-db.example.com
+  path: /
+  tlsSecretName: api-db-tls
+  database:
+    clusterName: demo-pg
+    databaseName: app
+    instances: 2
+    storageSize: 20Gi
+    postgresVersion: "16"

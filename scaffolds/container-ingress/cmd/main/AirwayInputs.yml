@@ -1,0 +1,8 @@
+apiVersion: stolos.cloud/v1alpha
+kind: AirwayInputs
+spec:
+  NamePlural:   "containeringresses"
+  NameSingular: "containeringress"
+  Kind:         "ContainerIngress"
+  Version:      "v1alpha1"
+  DisplayName:  "Container + Ingress"

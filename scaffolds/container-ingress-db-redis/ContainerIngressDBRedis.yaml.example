@@ -1,0 +1,21 @@
+apiVersion: templates.stolos.cloud/v1
+kind: ContainerIngressDBRedis
+metadata:
+  name: demo-suite
+  namespace: default
+spec:
+  image: ghcr.io/example/api:latest
+  replicas: 2
+  containerPort: 8080
+  host: suite.example.com
+  path: /
+  tlsSecretName: suite-tls
+  database:
+    clusterName: suite-db
+    databaseName: app
+    instances: 2
+    storageSize: 20Gi
+    postgresVersion: "16"
+  cache:
+    flavor: valkey
+    port: 6379
