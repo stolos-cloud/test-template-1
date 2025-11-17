@@ -9,7 +9,7 @@ spec:
   sources:
     - repoURL: 'https://github.com/stolos-cloud/stolos.git'
       path: stolos-yoke
-      targetRevision: HEAD
+      targetRevision: 01ecc5ced277d22c45e023e372023daaf992b458
       directory:
         include: 
           - "airway.yml"
