@@ -11,8 +11,7 @@ spec:
     path: templates
     targetRevision: HEAD
     directory:
-      include: 
-        - "*/airway.yml"
+      include: "*/airway.yml"
   project: default
   destination:
     server: https://kubernetes.default.svc
